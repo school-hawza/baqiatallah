@@ -103,7 +103,22 @@ function renderPubs(filter){
   const g=document.getElementById('pub-grid');
   const list=filter==='all'?ALL_PUBS:ALL_PUBS.filter(p=>p.pub_type===filter);
   if(!list.length){g.innerHTML='<div class="news-empty">لا توجد منشورات في هذه الفئة</div>';return;}
-  g.innerHTML=list.map(p=>'<div class="pub-c rv"><div class="pub-img">'+(p.img_data?'<img src="'+p.img_data+'" alt="'+p.title+'">':(p.pub_type==='file'?'📎':'✏️'))+'</div><div class="pub-b"><span class="pub-badge '+(p.pub_type==='file'?'badge-file':'badge-art')+'">'+(p.pub_type==='file'?'📎 ملف':'✏️ مقال')+'</span><div class="pub-ttl">'+p.title+'</div><div class="pub-txt">'+(p.body||'')+'</div><div class="pub-ft"><span class="pub-auth">'+(p.author?'✍️ '+p.author:'')+'</span>'+(p.file_data?'<a class="pub-dl" href="'+p.file_data+'" download="'+(p.file_name||'ملف')+'">⬇️ تحميل</a>':'')+'</div></div></div>').join('');
+  g.innerHTML=list.map((p,i)=>{
+    const isFile=p.pub_type==='file';
+    const hasLongBody=p.body&&p.body.length>200;
+    return '<div class="pub-c rv" onclick="openPubModal('+i+',\''+filter+'\')">'
+      +'<div class="pub-img">'+(p.img_data?'<img src="'+p.img_data+'" alt="'+p.title+'">':(isFile?'📎':'✏️'))+'</div>'
+      +'<div class="pub-b">'
+      +'<span class="pub-badge '+(isFile?'badge-file':'badge-art')+'">'+(isFile?'📎 ملف':'✏️ مقال')+'</span>'
+      +'<div class="pub-ttl">'+p.title+'</div>'
+      +'<div class="pub-txt">'+(p.body||'')+'</div>'
+      +'<div class="pub-ft">'
+      +'<span class="pub-auth">'+(p.author?'✍️ '+p.author:'')+'</span>'
+      +(isFile&&p.file_data?'<a class="pub-dl" href="'+p.file_data+'" download="'+(p.file_name||'ملف')+'" onclick="event.stopPropagation()">⬇️ تحميل</a>':'')
+      +'</div>'
+      +(hasLongBody||isFile?'<span class="pub-read-more">اقرأ المزيد ←</span>':'')
+      +'</div></div>';
+  }).join('');
   initReveal();
 }
 
@@ -112,6 +127,74 @@ function filterPubs(type,btn){
   btn.classList.add('on');
   renderPubs(type);
 }
+
+/* ===== نافذة المنشور الكاملة ===== */
+function openPubModal(index, filter){
+  const list=(filter==='all'||!filter)?ALL_PUBS:ALL_PUBS.filter(p=>p.pub_type===filter);
+  const p=list[index];
+  if(!p)return;
+
+  const isFile=p.pub_type==='file';
+  const ov=document.getElementById('pub-modal-ov');
+
+  // الصورة أو الأيقونة
+  const imgHtml=p.img_data
+    ?'<img class="pub-modal-img" src="'+p.img_data+'" alt="'+p.title+'">'
+    :'<div class="pub-modal-img-placeholder">'+(isFile?'📎':'✏️')+'</div>';
+
+  // التاريخ
+  const dateStr=p.pub_date||(p.created_at||'').split('T')[0]||'';
+
+  // محتوى الملف
+  const fileHtml=isFile&&p.file_data
+    ?'<a class="btn-p" href="'+p.file_data+'" download="'+(p.file_name||'ملف')+'">⬇️ تحميل الملف</a>'
+    :'';
+
+  document.getElementById('pub-modal-inner').innerHTML=
+    imgHtml
+    +'<div class="pub-modal-body">'
+    +'<span class="pub-modal-badge '+(isFile?'badge-file':'badge-art')+'">'+(isFile?'📎 ملف':'✏️ مقال')+'</span>'
+    +'<div class="pub-modal-title">'+p.title+'</div>'
+    +'<div class="pub-modal-meta">'
+    +(p.author?'<span>✍️ '+p.author+'</span>':'')
+    +(dateStr?'<span>📅 '+dateStr+'</span>':'')
+    +(p.category?'<span>🏷️ '+(p.category||'عام')+'</span>':'')
+    +'</div>'
+    +(p.body?'<div class="pub-modal-content">'+escHtml(p.body)+'</div>':'')
+    +(fileHtml?'<div class="pub-modal-actions">'+fileHtml+'</div>':'')
+    +'</div>';
+
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closePubModal(){
+  document.getElementById('pub-modal-ov').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function escHtml(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* إنشاء النافذة المنبثقة عند تحميل الصفحة */
+function createPubModalDOM(){
+  const ov=document.createElement('div');
+  ov.id='pub-modal-ov';
+  ov.className='pub-modal-ov';
+  ov.innerHTML='<div class="pub-modal"><button class="pub-modal-close" onclick="closePubModal()">✕</button><div id="pub-modal-inner"></div></div>';
+  // إغلاق عند الضغط خارج النافذة
+  ov.addEventListener('click',function(e){if(e.target===ov)closePubModal();});
+  document.body.appendChild(ov);
+}
+
+// إغلاق بزر Escape
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    const ov=document.getElementById('pub-modal-ov');
+    if(ov&&ov.classList.contains('open'))closePubModal();
+  }
+});
 
 function buildMarquee(items){
   const arr=items.split(',').map(s=>s.trim()).filter(Boolean);
@@ -153,6 +236,7 @@ function setHref(ids,url){(Array.isArray(ids)?ids:[ids]).forEach(id=>{const el=d
 
 document.addEventListener('DOMContentLoaded',()=>{
   initParticles();initReveal();
+  createPubModalDOM();  // إنشاء نافذة المنشورات
   loadSettings();loadNews();loadGallery();loadPubs();
   const nd=document.getElementById('n-date');if(nd)nd.value=new Date().toISOString().split('T')[0];
   const pd=document.getElementById('p-date');if(pd)pd.value=new Date().toISOString().split('T')[0];
