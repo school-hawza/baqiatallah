@@ -86,8 +86,7 @@ textarea{resize:vertical;}
 
 /* MARQUEE */
 .mq-wrap{overflow:hidden;padding:12px 0;background:rgba(201,168,76,.05);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.mq-track{display:flex;gap:28px;width:max-content;animation:mq 55s linear infinite;}
-.mq-track:hover{animation-play-state:paused;}
+.mq-track{display:flex;gap:28px;width:max-content;animation:mq 50s linear infinite;}
 .mq-track span{font-size:13px;font-weight:600;color:var(--textm);white-space:nowrap;}
 .mq-dot{color:var(--gold);}
 @keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
