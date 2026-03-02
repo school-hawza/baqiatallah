@@ -86,7 +86,8 @@ textarea{resize:vertical;}
 
 /* MARQUEE */
 .mq-wrap{overflow:hidden;padding:12px 0;background:rgba(201,168,76,.05);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.mq-track{display:flex;gap:28px;width:max-content;animation:mq 80s linear infinite;}
+.mq-track{display:flex;gap:28px;width:max-content;animation:mq 55s linear infinite;}
+.mq-track:hover{animation-play-state:paused;}
 .mq-track span{font-size:13px;font-weight:600;color:var(--textm);white-space:nowrap;}
 .mq-dot{color:var(--gold);}
 @keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
@@ -289,16 +290,19 @@ section{padding:78px 5%;}
 .av-card>span{font-size:20px;flex-shrink:0;}
 
 /* SOCIAL */
-.soc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1060px;margin:0 auto;}
+.soc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1060px;margin:0 auto;}
 .soc-c{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px 16px;text-align:center;position:relative;overflow:hidden;transition:.3s;}
 .soc-c:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.4);}
 .sc-ig:hover{border-color:#e1306c;}.sc-fb:hover{border-color:#1877f2;}
 .sc-wa:hover{border-color:#25d366;}.sc-ig2:hover{border-color:#c13584;}
+.sc-maps:hover{border-color:#4285f4;}.sc-linktree:hover{border-color:#39e09b;}
 .soc-bg{position:absolute;inset:0;opacity:0;transition:.3s;}
 .sc-ig .soc-bg{background:radial-gradient(at center,rgba(225,48,108,.12),transparent 70%);}
 .sc-fb .soc-bg{background:radial-gradient(at center,rgba(24,119,242,.12),transparent 70%);}
 .sc-wa .soc-bg{background:radial-gradient(at center,rgba(37,211,102,.12),transparent 70%);}
 .sc-ig2 .soc-bg{background:radial-gradient(at center,rgba(193,53,132,.12),transparent 70%);}
+.sc-maps .soc-bg{background:radial-gradient(at center,rgba(66,133,244,.12),transparent 70%);}
+.sc-linktree .soc-bg{background:radial-gradient(at center,rgba(57,224,155,.12),transparent 70%);}
 .soc-c:hover .soc-bg{opacity:1;}
 .soc-ic{font-size:38px;margin-bottom:9px;position:relative;}
 .soc-nm{font-size:14px;font-weight:700;margin-bottom:3px;position:relative;}
