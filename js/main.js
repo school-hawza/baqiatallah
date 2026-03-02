@@ -108,6 +108,8 @@ function applySettings(s) {
   if (s.ig2_link) setHref(['lk-ig2'], s.ig2_link);
   if (s.ig2_handle) setTxt('ig2-hd', s.ig2_handle);
   if (s.sys_link) setHref(['nav-sys','ft-sys'], s.sys_link);
+  if (s.maps_link) setHref(['lk-maps','ft-maps'], s.maps_link);
+  if (s.linktree_link) setHref(['lk-linktree','ft-linktree'], s.linktree_link);
   if (s.marquee_items) buildMarquee(s.marquee_items);
   if (s.colors && s.colors !== '{}') { try { applyColors(JSON.parse(s.colors)); } catch(e){} }
   if (s.font_headings) document.documentElement.style.setProperty('--fh', "'" + s.font_headings + "',serif");
