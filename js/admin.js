@@ -22,7 +22,7 @@ async function doLogin(){
       document.getElementById('adm-login').style.display='none';
       document.getElementById('adm-main').style.display='flex';
       err.style.display='none';
-      fillForms();loadAdmNews();loadAdmGal();loadAdmPub();
+      fillForms();loadAdmNews();loadAdmGal();loadAdmPub();loadAdmAudio();loadAdmBooks();
     } else {err.style.display='block';}
   }catch(e){err.style.display='block';err.textContent='خطأ في الاتصال';}
 }
@@ -320,4 +320,113 @@ function toast(id,msg,type){
   const el=document.getElementById(id);if(!el)return;
   el.textContent=msg;el.className='toast '+type;el.style.display='block';
   setTimeout(()=>el.style.display='none',4000);
+}
+
+// ══════════════════════════════════
+// الدروس الصوتية
+// ══════════════════════════════════
+async function loadAdmAudio(){
+  const list=document.getElementById('audio-list'),cnt=document.getElementById('audio-cnt');
+  if(!list)return;
+  try{
+    const d=await sbGet('audio_lessons','?order=created_at.desc');
+    if(cnt)cnt.textContent=d?d.length:0;
+    if(!d||!d.length){list.innerHTML='<p style="color:var(--textm);font-size:12px;padding:10px">لا توجد دروس</p>';return;}
+    list.innerHTML=d.map(a=>'<div class="adm-item"><div class="adm-item-t"><h4>🎙️ '+a.title+'</h4><p>'+(a.author||'')+(a.category?' · '+a.category:'')+'</p></div><button class="del-btn" onclick="delAudio('+a.id+')">🗑️ حذف</button></div>').join('');
+  }catch(e){}
+}
+
+async function addAudio(){
+  const ttl=gv('au-ttl').trim(),auth=gv('au-auth').trim();
+  if(!ttl){toast('audio-toast','أدخل اسم الدرس','err');return;}
+  if(!auth){toast('audio-toast','أدخل اسم الأستاذ','err');return;}
+  const audioF=document.getElementById('au-file').files[0];
+  if(!audioF){toast('audio-toast','أدخل الملف الصوتي','err');return;}
+  if(audioF.size>10*1024*1024){toast('audio-toast','حجم الملف أكبر من 10MB','err');return;}
+  const btn=document.getElementById('add-audio-btn');
+  btn.disabled=true;btn.textContent='⏳ جاري الرفع...';
+  const item={title:ttl,author:auth,category:gv('au-cat'),description:gv('au-desc'),lesson_date:gv('au-date')};
+  try{
+    item.audio_data=await toB64(audioF);
+    item.audio_name=audioF.name;
+    const imgF=document.getElementById('au-img').files[0];
+    if(imgF)item.img_data=await toB64(imgF);
+    await sbPost('audio_lessons',item);
+    toast('audio-toast','✅ تم نشر الدرس!','ok');
+    ['au-ttl','au-auth','au-cat','au-desc'].forEach(id=>sv(id,''));
+    document.getElementById('au-img-p').innerHTML='';
+    document.getElementById('au-audio-p').innerHTML='';
+    document.getElementById('au-file').value='';
+    document.getElementById('au-img').value='';
+    loadAudio();loadAdmAudio();
+  }catch(e){toast('audio-toast','❌ خطأ: '+e.message,'err');}
+  btn.disabled=false;btn.textContent='➕ نشر الدرس';
+}
+
+async function delAudio(id){
+  if(!confirm('حذف هذا الدرس؟'))return;
+  try{await sbDel('audio_lessons','?id=eq.'+id);loadAudio();loadAdmAudio();}catch(e){alert('خطأ');}
+}
+
+function previewAudio(inp){
+  const prev=document.getElementById('au-audio-p');
+  if(!prev||!inp.files[0])return;
+  const url=URL.createObjectURL(inp.files[0]);
+  prev.innerHTML='<audio controls style="width:100%;margin-top:8px"><source src="'+url+'"></audio><div style="font-size:10px;color:var(--gold);margin-top:4px">🎵 '+inp.files[0].name+'</div>';
+}
+
+// ══════════════════════════════════
+// الكتب المنهجية
+// ══════════════════════════════════
+async function loadAdmBooks(){
+  const list=document.getElementById('books-list'),cnt=document.getElementById('books-cnt');
+  if(!list)return;
+  try{
+    const d=await sbGet('books','?order=created_at.desc');
+    if(cnt)cnt.textContent=d?d.length:0;
+    if(!d||!d.length){list.innerHTML='<p style="color:var(--textm);font-size:12px;padding:10px">لا توجد كتب</p>';return;}
+    list.innerHTML=d.map(b=>'<div class="adm-item"><div class="adm-item-t"><h4>📖 '+b.title+'</h4><p>'+(b.author||'')+(b.level?' · '+b.level:'')+'</p></div><button class="del-btn" onclick="delBook('+b.id+')">🗑️ حذف</button></div>').join('');
+  }catch(e){}
+}
+
+async function addBook(){
+  const ttl=gv('bk-ttl').trim();
+  if(!ttl){toast('books-toast','أدخل اسم الكتاب','err');return;}
+  const fileF=document.getElementById('bk-file').files[0];
+  if(!fileF){toast('books-toast','أدخل ملف PDF','err');return;}
+  const btn=document.getElementById('add-book-btn');
+  btn.disabled=true;btn.textContent='⏳ جاري الرفع...';
+  const item={title:ttl,author:gv('bk-auth'),level:gv('bk-level'),category:gv('bk-cat'),description:gv('bk-desc')};
+  try{
+    item.file_data=await toB64(fileF);
+    item.file_name=fileF.name;
+    const imgF=document.getElementById('bk-img').files[0];
+    if(imgF)item.img_data=await toB64(imgF);
+    await sbPost('books',item);
+    toast('books-toast','✅ تم إضافة الكتاب!','ok');
+    ['bk-ttl','bk-auth','bk-level','bk-cat','bk-desc'].forEach(id=>sv(id,''));
+    document.getElementById('bk-img-p').innerHTML='';
+    document.getElementById('bk-file-name').textContent='';
+    document.getElementById('bk-file').value='';
+    document.getElementById('bk-img').value='';
+    loadBooks();loadAdmBooks();
+  }catch(e){toast('books-toast','❌ خطأ: '+e.message,'err');}
+  btn.disabled=false;btn.textContent='➕ إضافة الكتاب';
+}
+
+async function delBook(id){
+  if(!confirm('حذف هذا الكتاب؟'))return;
+  try{await sbDel('books','?id=eq.'+id);loadBooks();loadAdmBooks();}catch(e){alert('خطأ');}
+}
+
+function previewImg(inp,pid){
+  const prev=document.getElementById(pid);if(!prev||!inp.files[0])return;
+  const r=new FileReader();
+  r.onload=e=>{prev.innerHTML='<img src="'+e.target.result+'" style="max-height:100px;border-radius:8px;margin-top:6px;border:1px solid var(--border)">';};
+  r.readAsDataURL(inp.files[0]);
+}
+
+function showFileName(inp,pid){
+  const el=document.getElementById(pid);
+  if(el&&inp.files[0])el.textContent='📎 '+inp.files[0].name;
 }
