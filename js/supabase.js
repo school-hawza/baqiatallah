@@ -18,3 +18,19 @@ function toB64(file){
     r.readAsDataURL(file);
   });
 }
+
+// رفع ملف كبير لـ Supabase Storage والحصول على رابط عام
+async function sbUploadStorage(bucket, file){
+  const ext = file.name.split('.').pop();
+  const fileName = Date.now() + '_' + Math.random().toString(36).substring(2,8) + '.' + ext;
+  const uploadUrl = SB_URL + '/storage/v1/object/' + bucket + '/' + fileName;
+  const headers = {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+    'Content-Type': file.type || 'application/octet-stream',
+    'x-upsert': 'true'
+  };
+  const resp = await fetch(uploadUrl, { method:'POST', headers:headers, body:file });
+  if(!resp.ok){ const err = await resp.text(); throw new Error('فشل رفع الملف: ' + err); }
+  return SB_URL + '/storage/v1/object/public/' + bucket + '/' + fileName;
+}
