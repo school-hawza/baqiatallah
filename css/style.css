@@ -470,3 +470,17 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:56px 5%
 .book-dl{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);padding:9px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none;transition:.2s;}
 .book-dl:hover{transform:scale(1.03);box-shadow:0 6px 18px rgba(201,168,76,.4);}
 .books-empty{text-align:center;color:var(--textm);padding:60px;grid-column:1/-1;font-size:14px;}
+
+/* TEACHER CARDS */
+.audio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;max-width:1200px;margin:0 auto;}
+.teacher-c{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden;}
+.teacher-c::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.06),transparent);opacity:0;transition:.3s;}
+.teacher-c:hover{transform:translateY(-7px);border-color:var(--border2);box-shadow:0 20px 50px rgba(0,0,0,.45);}
+.teacher-c:hover::before{opacity:1;}
+.teacher-thumb{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 14px;overflow:hidden;}
+.teacher-thumb img{width:100%;height:100%;object-fit:cover;}
+.teacher-name{font-family:var(--fh);font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.teacher-count{font-size:12px;color:var(--gold);font-weight:700;background:rgba(201,168,76,.1);padding:3px 12px;border-radius:20px;display:inline-block;margin-bottom:8px;}
+.teacher-cats{font-size:11px;color:var(--textm);margin-bottom:10px;line-height:1.5;}
+.teacher-arrow{font-size:11px;color:var(--gold);font-weight:600;margin-top:6px;opacity:.7;}
+.teacher-c:hover .teacher-arrow{opacity:1;}
