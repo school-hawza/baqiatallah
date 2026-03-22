@@ -442,8 +442,84 @@ document.addEventListener('DOMContentLoaded', function () {
   loadNews();
   loadGallery();
   loadPubs();
+  loadAudio();
+  loadBooks();
   var nd = document.getElementById('n-date');
   if (nd) nd.value = new Date().toISOString().split('T')[0];
   var pd = document.getElementById('p-date');
   if (pd) pd.value = new Date().toISOString().split('T')[0];
+  var ad = document.getElementById('au-date');
+  if (ad) ad.value = new Date().toISOString().split('T')[0];
 });
+
+/* ══════════════════════════════════
+   الدروس الصوتية
+══════════════════════════════════ */
+async function loadAudio() {
+  var g = document.getElementById('audio-grid');
+  if (!g) return;
+  try {
+    var d = await sbGet('audio_lessons', '?order=created_at.desc');
+    if (!d || !d.length) {
+      g.innerHTML = '<div class="audio-empty">🎙️ لا توجد دروس صوتية بعد</div>';
+      return;
+    }
+    g.innerHTML = d.map(function(a) {
+      var thumb = a.img_data
+        ? '<img src="' + a.img_data + '" alt="">'
+        : '🎙️';
+      var dateStr = a.lesson_date || (a.created_at || '').split('T')[0] || '';
+      return '<div class="audio-c rv">'
+        + '<div class="audio-header">'
+        + '<div class="audio-thumb">' + thumb + '</div>'
+        + '<div class="audio-info">'
+        + '<div class="audio-title">' + a.title + '</div>'
+        + '<div class="audio-author">👤 ' + (a.author || '') + '</div>'
+        + (a.category ? '<div class="audio-cat">📚 ' + a.category + '</div>' : '')
+        + '</div></div>'
+        + (a.description ? '<div class="audio-desc">' + a.description + '</div>' : '')
+        + (a.audio_data ? '<div class="audio-player"><audio controls preload="none"><source src="' + a.audio_data + '"></audio></div>' : '')
+        + '<div class="audio-footer">'
+        + '<span>' + (dateStr ? '📅 ' + dateStr : '') + '</span>'
+        + (a.audio_data ? '<a class="audio-dl" href="' + a.audio_data + '" download="' + (a.title || 'درس') + '.mp3">⬇️ تحميل</a>' : '')
+        + '</div></div>';
+    }).join('');
+    initReveal();
+  } catch(e) {
+    g.innerHTML = '<div class="audio-empty">تعذّر تحميل الدروس</div>';
+  }
+}
+
+/* ══════════════════════════════════
+   الكتب المنهجية
+══════════════════════════════════ */
+async function loadBooks() {
+  var g = document.getElementById('books-grid');
+  if (!g) return;
+  try {
+    var d = await sbGet('books', '?order=created_at.desc');
+    if (!d || !d.length) {
+      g.innerHTML = '<div class="books-empty">📚 لا توجد كتب بعد</div>';
+      return;
+    }
+    g.innerHTML = d.map(function(b) {
+      var cover = b.img_data
+        ? '<img src="' + b.img_data + '" alt="' + b.title + '">'
+        : '📖';
+      return '<div class="book-c rv">'
+        + '<div class="book-cover">' + cover
+        + (b.level ? '<span class="book-level">' + b.level + '</span>' : '')
+        + '</div>'
+        + '<div class="book-body">'
+        + (b.category ? '<span class="book-cat">' + b.category + '</span>' : '')
+        + '<div class="book-title">' + b.title + '</div>'
+        + (b.author ? '<div class="book-author">✍️ ' + b.author + '</div>' : '')
+        + (b.description ? '<div class="book-desc">' + b.description + '</div>' : '')
+        + (b.file_data ? '<a class="book-dl" href="' + b.file_data + '" download="' + (b.title || 'كتاب') + '.pdf">📥 تحميل PDF</a>' : '')
+        + '</div></div>';
+    }).join('');
+    initReveal();
+  } catch(e) {
+    g.innerHTML = '<div class="books-empty">تعذّر تحميل الكتب</div>';
+  }
+}
