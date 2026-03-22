@@ -465,10 +465,10 @@ async function loadAudio() {
       return;
     }
     g.innerHTML = d.map(function(a) {
-      var thumb = a.img_data
-        ? '<img src="' + a.img_data + '" alt="">'
-        : '🎙️';
+      var thumb = a.img_data ? '<img src="' + a.img_data + '" alt="">' : '🎙️';
       var dateStr = a.lesson_date || (a.created_at || '').split('T')[0] || '';
+      // يدعم audio_url (Storage) و audio_data (base64 قديم)
+      var audioSrc = a.audio_url || a.audio_data || '';
       return '<div class="audio-c rv">'
         + '<div class="audio-header">'
         + '<div class="audio-thumb">' + thumb + '</div>'
@@ -478,10 +478,10 @@ async function loadAudio() {
         + (a.category ? '<div class="audio-cat">📚 ' + a.category + '</div>' : '')
         + '</div></div>'
         + (a.description ? '<div class="audio-desc">' + a.description + '</div>' : '')
-        + (a.audio_data ? '<div class="audio-player"><audio controls preload="none"><source src="' + a.audio_data + '"></audio></div>' : '')
+        + (audioSrc ? '<div class="audio-player"><audio controls preload="none"><source src="' + audioSrc + '"></audio></div>' : '')
         + '<div class="audio-footer">'
         + '<span>' + (dateStr ? '📅 ' + dateStr : '') + '</span>'
-        + (a.audio_data ? '<a class="audio-dl" href="' + a.audio_data + '" download="' + (a.title || 'درس') + '.mp3">⬇️ تحميل</a>' : '')
+        + (audioSrc ? '<a class="audio-dl" href="' + audioSrc + '" download="' + (a.title || 'درس') + '">⬇️ تحميل</a>' : '')
         + '</div></div>';
     }).join('');
     initReveal();
@@ -503,9 +503,9 @@ async function loadBooks() {
       return;
     }
     g.innerHTML = d.map(function(b) {
-      var cover = b.img_data
-        ? '<img src="' + b.img_data + '" alt="' + b.title + '">'
-        : '📖';
+      var cover = b.img_data ? '<img src="' + b.img_data + '" alt="' + b.title + '">' : '📖';
+      // يدعم file_url (Storage) و file_data (base64 قديم)
+      var fileSrc = b.file_url || b.file_data || '';
       return '<div class="book-c rv">'
         + '<div class="book-cover">' + cover
         + (b.level ? '<span class="book-level">' + b.level + '</span>' : '')
@@ -515,7 +515,7 @@ async function loadBooks() {
         + '<div class="book-title">' + b.title + '</div>'
         + (b.author ? '<div class="book-author">✍️ ' + b.author + '</div>' : '')
         + (b.description ? '<div class="book-desc">' + b.description + '</div>' : '')
-        + (b.file_data ? '<a class="book-dl" href="' + b.file_data + '" download="' + (b.title || 'كتاب') + '.pdf">📥 تحميل PDF</a>' : '')
+        + (fileSrc ? '<a class="book-dl" href="' + fileSrc + '" target="_blank">📥 تحميل PDF</a>' : '')
         + '</div></div>';
     }).join('');
     initReveal();
