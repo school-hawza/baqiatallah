@@ -341,17 +341,25 @@ async function addAudio(){
   if(!ttl){toast('audio-toast','أدخل اسم الدرس','err');return;}
   if(!auth){toast('audio-toast','أدخل اسم الأستاذ','err');return;}
   const audioF=document.getElementById('au-file').files[0];
-  if(!audioF){toast('audio-toast','أدخل الملف الصوتي','err');return;}
-  if(audioF.size>10*1024*1024){toast('audio-toast','حجم الملف أكبر من 10MB','err');return;}
+  if(!audioF){toast('audio-toast','اختر الملف الصوتي','err');return;}
   const btn=document.getElementById('add-audio-btn');
   btn.disabled=true;btn.textContent='⏳ جاري الرفع...';
-  const item={title:ttl,author:auth,category:gv('au-cat'),description:gv('au-desc'),lesson_date:gv('au-date')};
   try{
-    item.audio_data=await toB64(audioF);
-    item.audio_name=audioF.name;
+    // رفع الصوت لـ Storage (بدون حد للحجم تقريباً)
+    toast('audio-toast','⏳ يتم رفع الملف الصوتي، يرجى الانتظار...','ok');
+    const audioUrl = await sbUploadStorage('audio', audioF);
+    const item={
+      title:ttl, author:auth,
+      category:gv('au-cat'),
+      description:gv('au-desc'),
+      lesson_date:gv('au-date'),
+      audio_url: audioUrl,
+      audio_name: audioF.name
+    };
+    // الصورة المصغرة تبقى base64 لأنها صغيرة
     const imgF=document.getElementById('au-img').files[0];
-    if(imgF)item.img_data=await toB64(imgF);
-    await sbPost('audio_lessons',item);
+    if(imgF) item.img_data = await toB64(imgF);
+    await sbPost('audio_lessons', item);
     toast('audio-toast','✅ تم نشر الدرس!','ok');
     ['au-ttl','au-auth','au-cat','au-desc'].forEach(id=>sv(id,''));
     document.getElementById('au-img-p').innerHTML='';
@@ -372,7 +380,9 @@ function previewAudio(inp){
   const prev=document.getElementById('au-audio-p');
   if(!prev||!inp.files[0])return;
   const url=URL.createObjectURL(inp.files[0]);
-  prev.innerHTML='<audio controls style="width:100%;margin-top:8px"><source src="'+url+'"></audio><div style="font-size:10px;color:var(--gold);margin-top:4px">🎵 '+inp.files[0].name+'</div>';
+  prev.innerHTML='<audio controls style="width:100%;margin-top:8px"><source src="'+url+'"></audio>'
+    +'<div style="font-size:10px;color:var(--gold);margin-top:4px">🎵 '+inp.files[0].name
+    +' ('+( inp.files[0].size/1024/1024).toFixed(1)+'MB)</div>';
 }
 
 // ══════════════════════════════════
@@ -393,16 +403,23 @@ async function addBook(){
   const ttl=gv('bk-ttl').trim();
   if(!ttl){toast('books-toast','أدخل اسم الكتاب','err');return;}
   const fileF=document.getElementById('bk-file').files[0];
-  if(!fileF){toast('books-toast','أدخل ملف PDF','err');return;}
+  if(!fileF){toast('books-toast','اختر ملف PDF','err');return;}
   const btn=document.getElementById('add-book-btn');
   btn.disabled=true;btn.textContent='⏳ جاري الرفع...';
-  const item={title:ttl,author:gv('bk-auth'),level:gv('bk-level'),category:gv('bk-cat'),description:gv('bk-desc')};
   try{
-    item.file_data=await toB64(fileF);
-    item.file_name=fileF.name;
+    toast('books-toast','⏳ يتم رفع الكتاب، يرجى الانتظار...','ok');
+    const fileUrl = await sbUploadStorage('books', fileF);
+    const item={
+      title:ttl, author:gv('bk-auth'),
+      level:gv('bk-level'),
+      category:gv('bk-cat'),
+      description:gv('bk-desc'),
+      file_url: fileUrl,
+      file_name: fileF.name
+    };
     const imgF=document.getElementById('bk-img').files[0];
-    if(imgF)item.img_data=await toB64(imgF);
-    await sbPost('books',item);
+    if(imgF) item.img_data = await toB64(imgF);
+    await sbPost('books', item);
     toast('books-toast','✅ تم إضافة الكتاب!','ok');
     ['bk-ttl','bk-auth','bk-level','bk-cat','bk-desc'].forEach(id=>sv(id,''));
     document.getElementById('bk-img-p').innerHTML='';
@@ -428,5 +445,5 @@ function previewImg(inp,pid){
 
 function showFileName(inp,pid){
   const el=document.getElementById(pid);
-  if(el&&inp.files[0])el.textContent='📎 '+inp.files[0].name;
+  if(el&&inp.files[0])el.textContent='📎 '+inp.files[0].name+' ('+(inp.files[0].size/1024/1024).toFixed(1)+'MB)';
 }
