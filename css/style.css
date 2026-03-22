@@ -437,7 +437,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:56px 5%
 }
 
 /* AUDIO LESSONS */
-.audio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;max-width:1200px;margin:0 auto;}
+.audio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;max-width:1200px;margin:0 auto;}
 .audio-c{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:.3s;}
 .audio-c:hover{transform:translateY(-5px);border-color:var(--border2);box-shadow:0 16px 40px rgba(0,0,0,.4);}
 .audio-header{padding:18px 18px 0;display:flex;gap:13px;align-items:flex-start;}
@@ -472,7 +472,6 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:56px 5%
 .books-empty{text-align:center;color:var(--textm);padding:60px;grid-column:1/-1;font-size:14px;}
 
 /* TEACHER CARDS */
-.audio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;max-width:1200px;margin:0 auto;}
 .teacher-c{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden;}
 .teacher-c::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.06),transparent);opacity:0;transition:.3s;}
 .teacher-c:hover{transform:translateY(-7px);border-color:var(--border2);box-shadow:0 20px 50px rgba(0,0,0,.45);}
