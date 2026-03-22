@@ -13,10 +13,10 @@
 <nav id="nav">
   <div class="nav-c">
     <a href="#hero" class="nav-brand"><div class="nav-logo"><img id="nav-logo-img" src="" alt="شعار"></div><div class="nav-nt"><span class="nav-name" id="nav-name">مدرسة بقية الله الأعظم</span><span class="nav-city" id="nav-city">كربلاء المقدسة</span></div></a>
-    <div class="nav-links"><a href="#news">الأخبار</a><a href="#gallery">الأنشطة</a><a href="#publications">المنشورات</a><a href="#about">عن المدرسة</a><a href="#contact">تواصل</a><a href="#reg">التسجيل</a></div>
+    <div class="nav-links"><a href="#news">الأخبار</a><a href="#gallery">الأنشطة</a><a href="#publications">المنشورات</a><a href="#audio">الدروس</a><a href="#books">الكتب</a><a href="#about">عن المدرسة</a><a href="#contact">تواصل</a><a href="#reg">التسجيل</a></div>
     <div class="nav-acts"><a id="nav-sys" href="#" class="btn-sys" target="_blank">دخول النظام</a><button class="burger" onclick="toggleMob()">☰</button></div>
   </div>
-  <div class="mob-nav" id="mob-nav"><a href="#news" onclick="toggleMob()">الأخبار</a><a href="#gallery" onclick="toggleMob()">الأنشطة</a><a href="#publications" onclick="toggleMob()">المنشورات</a><a href="#about" onclick="toggleMob()">عن المدرسة</a><a href="#contact" onclick="toggleMob()">تواصل</a><a href="#reg" onclick="toggleMob()">التسجيل</a></div>
+  <div class="mob-nav" id="mob-nav"><a href="#news" onclick="toggleMob()">الأخبار</a><a href="#gallery" onclick="toggleMob()">الأنشطة</a><a href="#publications" onclick="toggleMob()">المنشورات</a><a href="#audio" onclick="toggleMob()">الدروس</a><a href="#books" onclick="toggleMob()">الكتب</a><a href="#about" onclick="toggleMob()">عن المدرسة</a><a href="#contact" onclick="toggleMob()">تواصل</a><a href="#reg" onclick="toggleMob()">التسجيل</a></div>
 </nav>
 <section id="hero"><div class="h-bg"></div><div class="h-pat"></div><div class="h-parts" id="h-parts"></div>
   <div class="h-c">
@@ -50,6 +50,12 @@
 <section id="publications"><div class="sec-hd rv"><span class="sec-tag">المنشورات</span><h2 class="sec-ttl">مقالات وملفات المدرسة</h2><p class="sec-sub">مقالات علمية وملفات قابلة للتحميل</p></div>
 <div class="pub-tabs"><button class="pub-tab on" onclick="filterPubs('all',this)">الكل</button><button class="pub-tab" onclick="filterPubs('article',this)">مقالات</button><button class="pub-tab" onclick="filterPubs('file',this)">ملفات</button></div>
 <div class="pub-grid" id="pub-grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></section>
+
+<section id="audio" class="sec-dk"><div class="sec-hd rv"><span class="sec-tag">الدروس الصوتية</span><h2 class="sec-ttl">دروس علمية مسموعة</h2><p class="sec-sub">استمع وحمّل الدروس الصوتية لأساتذة الحوزة</p></div>
+<div class="audio-grid" id="audio-grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></section>
+
+<section id="books"><div class="sec-hd rv"><span class="sec-tag">المكتبة</span><h2 class="sec-ttl">الكتب المنهجية</h2><p class="sec-sub">الكتب الدراسية والمراجع العلمية للحوزة</p></div>
+<div class="books-grid" id="books-grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></section>
 <section id="about" class="sec-dk"><div class="about-grid">
   <div class="rv"><span class="sec-tag">تعرف علينا</span><h2 class="sec-ttl" style="text-align:right;margin-bottom:14px" id="about-title">لماذا حوزة بقية الله الأعظم؟</h2>
     <p class="about-p" id="about-p1">نقدم تعليماً حوزوياً دينياً أصيلاً بأساليب عصرية متطورة تحت إشراف نخبة من العلماء.</p>
@@ -73,7 +79,7 @@
   <a id="lk-ig" href="https://www.instagram.com/bqeat.allah.school" class="soc-c sc-ig rv" target="_blank"><div class="soc-bg"></div><div class="soc-ic">📸</div><div class="soc-nm">Instagram</div><div class="soc-hd" id="ig-hd">@bqeat.allah.school</div></a>
   <a id="lk-fb" href="https://www.facebook.com/bqeat.allah" class="soc-c sc-fb rv" target="_blank"><div class="soc-bg"></div><div class="soc-ic">📘</div><div class="soc-nm">Facebook</div><div class="soc-hd" id="fb-hd">bqeat.allah</div></a>
   <a id="lk-wa" href="https://wa.me/9647751886865" class="soc-c sc-wa rv" target="_blank"><div class="soc-bg"></div><div class="soc-ic">💬</div><div class="soc-nm">WhatsApp</div><div class="soc-hd">للتسجيل والاستفسار</div></a>
-  <a id="lk-ig2" href="https://www.instagram.com/baqiatallah_school/" class="soc-c sc-ig2 rv" target="_blank"><div class="soc-bg"></div><div class="soc-ic">🌸</div><div class="soc-nm">الحوزة النسائية</div><div class="soc-hd" id="ig2-hd">@baqiatallah_school</div></a>
+  <a id="lk-ig2" href="https://www.instagram.com/baqiatallah_school/" class="soc-c sc-ig2 rv" target="_blank"><div class="soc-bg"></div><div class="soc-ic">📖</div><div class="soc-nm">الحوزة النسائية</div><div class="soc-hd" id="ig2-hd">@baqiatallah_school</div></a>
   <a href="https://maps.app.goo.gl/m6zxGbiTwzL7tmLw5" class="soc-c sc-maps rv" target="_blank"><div class="soc-bg"></div><div class="soc-ic">📍</div><div class="soc-nm">موقعنا على الخريطة</div><div class="soc-hd">Google Maps</div></a>
   <a href="https://linktr.ee/baqiatallah1" class="soc-c sc-linktree rv" target="_blank"><div class="soc-bg"></div><div class="soc-ic">🌿</div><div class="soc-nm">كل روابطنا</div><div class="soc-hd">Linktree</div></a>
 </div></section>
@@ -103,6 +109,8 @@
 <button class="sb-btn on" onclick="apSec(this,&apos;s-news&apos;)">الأخبار</button>
 <button class="sb-btn" onclick="apSec(this,&apos;s-gal&apos;)">الصور</button>
 <button class="sb-btn" onclick="apSec(this,&apos;s-pub&apos;)">المنشورات</button>
+<button class="sb-btn" onclick="apSec(this,&apos;s-audio&apos;)">الدروس الصوتية</button>
+<button class="sb-btn" onclick="apSec(this,&apos;s-books&apos;)">الكتب</button>
 <div class="sb-sep"></div>
 <button class="sb-btn" onclick="apSec(this,&apos;s-stats&apos;)">الإحصائيات</button>
 <button class="sb-btn" onclick="apSec(this,&apos;s-text&apos;)">النصوص</button>
@@ -173,6 +181,25 @@ document.getElementById('adm-body-content').innerHTML = `
 <div class='toast' id='pub-toast'></div>
 </div>
 <div class='adm-card'><h3>المنشورات (<span id='pub-cnt'>0</span>)</h3><div class='adm-list' id='pub-list'></div></div></div>
+
+<div class='adm-sec' id='s-audio'><h2>الدروس الصوتية</h2>
+<div class='adm-card'><h3>إضافة درس صوتي جديد</h3>
+<div class='fg'><div class='field'><label>اسم الدرس *</label><input id='au-ttl' placeholder='مثال: درس الفقه - المجلس الأول'></div><div class='field'><label>اسم الأستاذ *</label><input id='au-auth' placeholder='مثال: الشيخ محمد علي'></div></div>
+<div class='fg'><div class='field'><label>الموضوع / السلسلة</label><input id='au-cat' placeholder='مثال: سلسلة أصول الفقه'></div><div class='field'><label>تاريخ الدرس</label><input type='date' id='au-date'></div></div>
+<div class='fg g1'><div class='field'><label>وصف الدرس</label><textarea id='au-desc' placeholder='ملخص أو وصف مختصر للدرس'></textarea></div></div>
+<div class='fg'><div class='field'><label>الملف الصوتي (MP3 / M4A)</label><input type='file' id='au-file' accept='audio/*' onchange='previewAudio(this)'><small style='color:var(--textm);font-size:10px'>الحجم الأقصى: 10MB</small></div><div class='field'><label>صورة الغلاف (اختياري)</label><input type='file' id='au-img' accept='image/*' onchange='previewImg(this,"au-img-p")'><div id='au-img-p'></div></div></div>
+<div id='au-audio-p' style='margin:8px 0'></div>
+<button class='btn-p' id='add-audio-btn' onclick='addAudio()'>➕ نشر الدرس</button><div class='toast' id='audio-toast'></div></div>
+<div class='adm-card'><h3>الدروس المنشورة (<span id='audio-cnt'>0</span>)</h3><div class='adm-list' id='audio-list'></div></div></div>
+
+<div class='adm-sec' id='s-books'><h2>الكتب المنهجية</h2>
+<div class='adm-card'><h3>إضافة كتاب جديد</h3>
+<div class='fg'><div class='field'><label>اسم الكتاب *</label><input id='bk-ttl' placeholder='مثال: شرح اللمعة الدمشقية'></div><div class='field'><label>المؤلف</label><input id='bk-auth' placeholder='مثال: الشهيد الثاني'></div></div>
+<div class='fg'><div class='field'><label>الصف / المرحلة</label><input id='bk-level' placeholder='مثال: المرحلة الأولى'></div><div class='field'><label>التصنيف</label><input id='bk-cat' placeholder='مثال: فقه / أصول / عقيدة'></div></div>
+<div class='fg g1'><div class='field'><label>وصف الكتاب</label><textarea id='bk-desc' placeholder='نبذة مختصرة عن الكتاب'></textarea></div></div>
+<div class='fg'><div class='field'><label>ملف PDF *</label><input type='file' id='bk-file' accept='.pdf' onchange='showFileName(this,"bk-file-name")'><div id='bk-file-name' style='font-size:10px;color:var(--gold);margin-top:4px'></div></div><div class='field'><label>صورة الغلاف</label><input type='file' id='bk-img' accept='image/*' onchange='previewImg(this,"bk-img-p")'><div id='bk-img-p'></div></div></div>
+<button class='btn-p' id='add-book-btn' onclick='addBook()'>➕ إضافة الكتاب</button><div class='toast' id='books-toast'></div></div>
+<div class='adm-card'><h3>الكتب المضافة (<span id='books-cnt'>0</span>)</h3><div class='adm-list' id='books-list'></div></div></div>
 
 <div class='adm-sec' id='s-stats'><h2>الإحصائيات</h2>
 <div class='adm-card'><h3>الأرقام والتسميات</h3>
