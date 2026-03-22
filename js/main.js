@@ -569,7 +569,7 @@ function createTeacherModalDOM() {
   ov.id = 'teacher-modal-ov';
   ov.className = 'pub-modal-ov';
   ov.innerHTML =
-    '<div class="pub-modal" style="max-width:900px;width:95%">'
+    '<div class="teacher-modal">'
     + '<button class="pub-modal-close" id="teacher-modal-close">✕</button>'
     + '<div style="padding:22px 28px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">'
     + '<span style="font-size:28px">🎙️</span>'
