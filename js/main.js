@@ -436,6 +436,7 @@ function setHref(ids, url) {
 /* ── تهيئة عند تحميل الصفحة ── */
 document.addEventListener('DOMContentLoaded', function () {
   createPubModalDOM();
+  createTeacherModalDOM();
   initParticles();
   initReveal();
   loadSettings();
@@ -459,35 +460,109 @@ async function loadAudio() {
   var g = document.getElementById('audio-grid');
   if (!g) return;
   try {
-    var d = await sbGet('audio_lessons', '?order=created_at.desc');
+    var d = await sbGet('audio_lessons', '?order=author.asc,created_at.desc');
     if (!d || !d.length) {
       g.innerHTML = '<div class="audio-empty">🎙️ لا توجد دروس صوتية بعد</div>';
       return;
     }
-    g.innerHTML = d.map(function(a) {
-      var thumb = a.img_data ? '<img src="' + a.img_data + '" alt="">' : '🎙️';
-      var dateStr = a.lesson_date || (a.created_at || '').split('T')[0] || '';
-      // يدعم audio_url (Storage) و audio_data (base64 قديم)
+    // تجميع الدروس حسب الأستاذ
+    var teachers = {};
+    d.forEach(function(a) {
+      var name = a.author || 'غير محدد';
+      if (!teachers[name]) teachers[name] = [];
+      teachers[name].push(a);
+    });
+
+    // عرض بطاقة لكل أستاذ
+    g.innerHTML = Object.keys(teachers).map(function(name) {
+      var lessons = teachers[name];
+      var count = lessons.length;
+      // صورة الأستاذ من أول درس عنده
+      var thumb = lessons[0].img_data
+        ? '<img src="' + lessons[0].img_data + '" alt="">'
+        : '👤';
+      // تجميع أسماء السلاسل
+      var cats = [];
+      lessons.forEach(function(l){ if(l.category && cats.indexOf(l.category)===-1) cats.push(l.category); });
+      return '<div class="teacher-c rv" onclick="openTeacherModal(\'' + encodeURIComponent(name) + '\')">'
+        + '<div class="teacher-thumb">' + thumb + '</div>'
+        + '<div class="teacher-name">' + name + '</div>'
+        + '<div class="teacher-count">' + count + ' درس</div>'
+        + (cats.length ? '<div class="teacher-cats">' + cats.slice(0,2).join(' · ') + '</div>' : '')
+        + '<div class="teacher-arrow">اضغط لعرض الدروس ←</div>'
+        + '</div>';
+    }).join('');
+    initReveal();
+  } catch(e) {
+    g.innerHTML = '<div class="audio-empty">تعذّر تحميل الدروس</div>';
+  }
+}
+
+// فتح نافذة دروس أستاذ معين
+var ALL_AUDIO = [];
+
+async function openTeacherModal(encodedName) {
+  var name = decodeURIComponent(encodedName);
+  var ov = document.getElementById('teacher-modal-ov');
+  var inner = document.getElementById('teacher-modal-inner');
+  var title = document.getElementById('teacher-modal-title');
+  if (!ov || !inner) return;
+
+  title.textContent = '🎙️ دروس ' + name;
+  inner.innerHTML = '<div class="audio-empty">⏳ جاري التحميل...</div>';
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  try {
+    var d = await sbGet('audio_lessons', '?author=eq.' + encodeURIComponent(name) + '&order=created_at.asc');
+    if (!d || !d.length) {
+      inner.innerHTML = '<div class="audio-empty">لا توجد دروس</div>';
+      return;
+    }
+    inner.innerHTML = d.map(function(a) {
       var audioSrc = a.audio_url || a.audio_data || '';
-      return '<div class="audio-c rv">'
+      var dateStr = a.lesson_date || (a.created_at || '').split('T')[0] || '';
+      return '<div class="audio-c">'
         + '<div class="audio-header">'
-        + '<div class="audio-thumb">' + thumb + '</div>'
+        + '<div class="audio-thumb">🎙️</div>'
         + '<div class="audio-info">'
         + '<div class="audio-title">' + a.title + '</div>'
-        + '<div class="audio-author">👤 ' + (a.author || '') + '</div>'
         + (a.category ? '<div class="audio-cat">📚 ' + a.category + '</div>' : '')
         + '</div></div>'
         + (a.description ? '<div class="audio-desc">' + a.description + '</div>' : '')
         + (audioSrc ? '<div class="audio-player"><audio controls preload="none"><source src="' + audioSrc + '"></audio></div>' : '')
         + '<div class="audio-footer">'
         + '<span>' + (dateStr ? '📅 ' + dateStr : '') + '</span>'
-        + (audioSrc ? '<a class="audio-dl" href="' + audioSrc + '" download="' + (a.title || 'درس') + '">⬇️ تحميل</a>' : '')
+        + (audioSrc ? '<a class="audio-dl" href="' + audioSrc + '" download="' + a.title + '">⬇️ تحميل</a>' : '')
         + '</div></div>';
     }).join('');
-    initReveal();
   } catch(e) {
-    g.innerHTML = '<div class="audio-empty">تعذّر تحميل الدروس</div>';
+    inner.innerHTML = '<div class="audio-empty">تعذّر تحميل الدروس</div>';
   }
+}
+
+function closeTeacherModal() {
+  var ov = document.getElementById('teacher-modal-ov');
+  if (ov) ov.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function createTeacherModalDOM() {
+  if (document.getElementById('teacher-modal-ov')) return;
+  var ov = document.createElement('div');
+  ov.id = 'teacher-modal-ov';
+  ov.className = 'pub-modal-ov';
+  ov.innerHTML =
+    '<div class="pub-modal" style="max-width:860px">'
+    + '<button class="pub-modal-close" id="teacher-modal-close">✕</button>'
+    + '<div style="padding:24px 28px 10px;border-bottom:1px solid var(--border)">'
+    + '<div id="teacher-modal-title" style="font-family:var(--fh);font-size:20px;color:var(--gold)"></div>'
+    + '</div>'
+    + '<div id="teacher-modal-inner" style="padding:20px;display:flex;flex-direction:column;gap:14px;max-height:75vh;overflow-y:auto"></div>'
+    + '</div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click', function(e){ if(e.target===ov) closeTeacherModal(); });
+  document.getElementById('teacher-modal-close').addEventListener('click', closeTeacherModal);
 }
 
 /* ══════════════════════════════════
