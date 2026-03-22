@@ -519,22 +519,38 @@ async function openTeacherModal(encodedName) {
       inner.innerHTML = '<div class="audio-empty">لا توجد دروس</div>';
       return;
     }
-    inner.innerHTML = d.map(function(a) {
+    inner.innerHTML = d.map(function(a, i) {
       var audioSrc = a.audio_url || a.audio_data || '';
       var dateStr = a.lesson_date || (a.created_at || '').split('T')[0] || '';
-      return '<div class="audio-c">'
-        + '<div class="audio-header">'
-        + '<div class="audio-thumb">🎙️</div>'
-        + '<div class="audio-info">'
-        + '<div class="audio-title">' + a.title + '</div>'
-        + (a.category ? '<div class="audio-cat">📚 ' + a.category + '</div>' : '')
-        + '</div></div>'
-        + (a.description ? '<div class="audio-desc">' + a.description + '</div>' : '')
-        + (audioSrc ? '<div class="audio-player"><audio controls preload="none"><source src="' + audioSrc + '"></audio></div>' : '')
-        + '<div class="audio-footer">'
-        + '<span>' + (dateStr ? '📅 ' + dateStr : '') + '</span>'
-        + (audioSrc ? '<a class="audio-dl" href="' + audioSrc + '" download="' + a.title + '">⬇️ تحميل</a>' : '')
-        + '</div></div>';
+      return '<div style="background:var(--dark3);border:1px solid var(--border);border-radius:14px;overflow:hidden;">'
+        /* رأس الدرس */
+        + '<div style="padding:14px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)">'
+        + '<div style="width:44px;height:44px;border-radius:10px;background:rgba(201,168,76,.15);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎙️</div>'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">' + (i+1) + '. ' + a.title + '</div>'
+        + '<div style="display:flex;gap:12px;flex-wrap:wrap">'
+        + (a.category ? '<span style="font-size:11px;color:var(--gold)">📚 ' + a.category + '</span>' : '')
+        + (dateStr ? '<span style="font-size:11px;color:var(--textm)">📅 ' + dateStr + '</span>' : '')
+        + '</div>'
+        + '</div>'
+        + '</div>'
+        /* الوصف */
+        + (a.description ? '<div style="padding:10px 18px;font-size:12px;color:var(--textm);line-height:1.7;border-bottom:1px solid var(--border)">' + a.description + '</div>' : '')
+        /* المشغّل الصوتي */
+        + (audioSrc
+          ? '<div style="padding:12px 18px;background:rgba(0,0,0,.2)">'
+            + '<audio controls preload="none" style="width:100%;height:40px;accent-color:var(--gold)">'
+            + '<source src="' + audioSrc + '"></audio>'
+            + '</div>'
+          : '')
+        /* زر التحميل */
+        + (audioSrc
+          ? '<div style="padding:10px 18px;display:flex;justify-content:flex-end">'
+            + '<a href="' + audioSrc + '" download="' + a.title + '.mp3" '
+            + 'style="display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,.1);border:1px solid var(--border2);color:var(--gold);padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none">⬇️ تحميل الدرس</a>'
+            + '</div>'
+          : '')
+        + '</div>';
     }).join('');
   } catch(e) {
     inner.innerHTML = '<div class="audio-empty">تعذّر تحميل الدروس</div>';
@@ -553,12 +569,13 @@ function createTeacherModalDOM() {
   ov.id = 'teacher-modal-ov';
   ov.className = 'pub-modal-ov';
   ov.innerHTML =
-    '<div class="pub-modal" style="max-width:860px">'
+    '<div class="pub-modal" style="max-width:900px;width:95%">'
     + '<button class="pub-modal-close" id="teacher-modal-close">✕</button>'
-    + '<div style="padding:24px 28px 10px;border-bottom:1px solid var(--border)">'
-    + '<div id="teacher-modal-title" style="font-family:var(--fh);font-size:20px;color:var(--gold)"></div>'
+    + '<div style="padding:22px 28px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">'
+    + '<span style="font-size:28px">🎙️</span>'
+    + '<div id="teacher-modal-title" style="font-family:var(--fh);font-size:22px;color:var(--gold);font-weight:700"></div>'
     + '</div>'
-    + '<div id="teacher-modal-inner" style="padding:20px;display:flex;flex-direction:column;gap:14px;max-height:75vh;overflow-y:auto"></div>'
+    + '<div id="teacher-modal-inner" style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;max-height:72vh;overflow-y:auto"></div>'
     + '</div>';
   document.body.appendChild(ov);
   ov.addEventListener('click', function(e){ if(e.target===ov) closeTeacherModal(); });
