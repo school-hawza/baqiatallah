@@ -522,32 +522,24 @@ async function openTeacherModal(encodedName) {
     inner.innerHTML = d.map(function(a, i) {
       var audioSrc = a.audio_url || a.audio_data || '';
       var dateStr = a.lesson_date || (a.created_at || '').split('T')[0] || '';
-      return '<div style="background:var(--dark3);border:1px solid var(--border);border-radius:14px;overflow:hidden;">'
-        /* رأس الدرس */
-        + '<div style="padding:14px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)">'
-        + '<div style="width:44px;height:44px;border-radius:10px;background:rgba(201,168,76,.15);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎙️</div>'
-        + '<div style="flex:1;min-width:0">'
-        + '<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">' + (i+1) + '. ' + a.title + '</div>'
-        + '<div style="display:flex;gap:12px;flex-wrap:wrap">'
+      return '<div style="background:var(--dark3);border:1px solid var(--border2);border-radius:14px;">'
+        + '<div style="padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)">'
+        + '<div style="width:40px;height:40px;border-radius:10px;background:rgba(201,168,76,.15);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎙️</div>'
+        + '<div style="flex:1;min-width:0;text-align:right">'
+        + '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">' + (i+1) + '. ' + a.title + '</div>'
+        + '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">'
         + (a.category ? '<span style="font-size:11px;color:var(--gold)">📚 ' + a.category + '</span>' : '')
         + (dateStr ? '<span style="font-size:11px;color:var(--textm)">📅 ' + dateStr + '</span>' : '')
         + '</div>'
         + '</div>'
         + '</div>'
-        /* الوصف */
-        + (a.description ? '<div style="padding:10px 18px;font-size:12px;color:var(--textm);line-height:1.7;border-bottom:1px solid var(--border)">' + a.description + '</div>' : '')
-        /* المشغّل الصوتي */
+        + (a.description ? '<div style="padding:8px 18px;font-size:11px;color:var(--textm);line-height:1.7;border-bottom:1px solid var(--border)">' + a.description + '</div>' : '')
         + (audioSrc
-          ? '<div style="padding:12px 18px;background:rgba(0,0,0,.2)">'
-            + '<audio controls preload="none" style="width:100%;height:40px;accent-color:var(--gold)">'
+          ? '<div style="padding:12px 18px;">'
+            + '<audio controls preload="none" style="width:100%;display:block;margin-bottom:10px">'
             + '<source src="' + audioSrc + '"></audio>'
-            + '</div>'
-          : '')
-        /* زر التحميل */
-        + (audioSrc
-          ? '<div style="padding:10px 18px;display:flex;justify-content:flex-end">'
             + '<a href="' + audioSrc + '" download="' + a.title + '.mp3" '
-            + 'style="display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,.1);border:1px solid var(--border2);color:var(--gold);padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none">⬇️ تحميل الدرس</a>'
+            + 'style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(201,168,76,.1);border:1px solid var(--border2);color:var(--gold);padding:8px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none;width:100%">⬇️ تحميل الدرس</a>'
             + '</div>'
           : '')
         + '</div>';
@@ -571,11 +563,10 @@ function createTeacherModalDOM() {
   ov.innerHTML =
     '<div class="teacher-modal">'
     + '<button class="pub-modal-close" id="teacher-modal-close">✕</button>'
-    + '<div style="padding:22px 28px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">'
-    + '<span style="font-size:28px">🎙️</span>'
-    + '<div id="teacher-modal-title" style="font-family:var(--fh);font-size:22px;color:var(--gold);font-weight:700"></div>'
+    + '<div style="padding:16px 52px 14px 16px;border-bottom:1px solid var(--border)">'
+    + '<div id="teacher-modal-title" style="font-family:var(--fh);font-size:17px;color:var(--gold);font-weight:700;text-align:right;line-height:1.5"></div>'
     + '</div>'
-    + '<div id="teacher-modal-inner" style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;max-height:72vh;overflow-y:auto"></div>'
+    + '<div id="teacher-modal-inner" style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;max-height:76vh;overflow-y:auto"></div>'
     + '</div>';
   document.body.appendChild(ov);
   ov.addEventListener('click', function(e){ if(e.target===ov) closeTeacherModal(); });
